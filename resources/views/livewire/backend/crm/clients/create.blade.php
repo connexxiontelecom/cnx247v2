@@ -125,7 +125,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-3">
-                                <label for="">Postal Code <sup class="text-danger">*</sup> </label>
+                                <label for="">Postal Code  </label>
                                 <input type="text" class="form-control" placeholder="Postal Code" wire:model="postal_code">
                                 @error('postal_code')
                                     <i class="text-danger mt-2">{{$message}}</i>
