@@ -200,152 +200,152 @@ class CRMController extends Controller
     /*
     * Raise an invoice
     */
-    public function raiseAnInvoice(Request $request){
-        if($request->status == 1){
-            $this->validate($request,[
-                'issue_date'=>'required',
-                'due_date'=>'required|after_or_equal:issue_date',
-                'description.*'=>'required',
-                'quantity.*'=>'required',
-								'client_account'=>'required',
-								'currency'=>'required'
-            ]);
-        }else{
-            $this->validate($request,[
-                'issue_date'=>'required',
-                'due_date'=>'required|after_or_equal:issue_date',
-                'description.*'=>'required',
-								'quantity.*'=>'required',
-								'currency'=>'required'
-            ]);
+	public function raiseAnInvoice(Request $request){
+		if($request->status == 1){
+			$this->validate($request,[
+				'issue_date'=>'required',
+				'due_date'=>'required|after_or_equal:issue_date',
+				'description.*'=>'required',
+				'quantity.*'=>'required',
+				'client_account'=>'required',
+				'currency'=>'required'
+			]);
+		}else{
+			$this->validate($request,[
+				'issue_date'=>'required',
+				'due_date'=>'required|after_or_equal:issue_date',
+				'description.*'=>'required',
+				'quantity.*'=>'required',
+				'currency'=>'required'
+			]);
 
-        }
-        $totalAmount = 0;
-        if(!empty($request->total)){
-            for($i = 0; $i<count($request->total); $i++){
-                $totalAmount += $request->total[$i];
-            }
-        }
-        $productGlCodes = [];
-        if(!empty($request->description)){
-            for($d = 0; $d < count($request->description); $d ++){
-                $product = Product::where('tenant_id', Auth::user()->tenant_id)
-                                    ->where('id',$request->description[$d])->first();
-                array_push($productGlCodes, $product->glcode);
-            }
-        }
-        //Check if client already exist
-        $clientExist = Lead::where('client_id', $request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
-        if(empty($clientExist)){
-            $lead = new Lead;
-            $lead->client_id = $request->clientId;
-            $lead->tenant_id = Auth::user()->tenant_id;
-            $lead->converted_by = Auth::user()->id;
-            $lead->save();
-        }
-				$ref_no = strtoupper(substr(sha1(time()), 32,40));
-        #Generate invoice
-        $invoice = new Invoice;
-        $invoice->invoice_no = $request->invoiceNo;
-        $invoice->ref_no = $ref_no;
-        $invoice->client_id = $request->clientId;
-        $invoice->tenant_id = Auth::user()->tenant_id;
-				$invoice->issued_by = Auth::user()->id;
+		}
+		$totalAmount = 0;
+		if(!empty($request->total)){
+			for($i = 0; $i<count($request->total); $i++){
+				$totalAmount += $request->total[$i];
+			}
+		}
+		$productGlCodes = [];
+		if(!empty($request->description)){
+			for($d = 0; $d < count($request->description); $d ++){
+				$product = Product::where('tenant_id', Auth::user()->tenant_id)
+					->where('id',$request->description[$d])->first();
+				array_push($productGlCodes, $product->glcode);
+			}
+		}
+		//Check if client already exist
+		$clientExist = Lead::where('client_id', $request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
+		if(empty($clientExist)){
+			$lead = new Lead;
+			$lead->client_id = $request->clientId;
+			$lead->tenant_id = Auth::user()->tenant_id;
+			$lead->converted_by = Auth::user()->id;
+			$lead->save();
+		}
+		$ref_no = strtoupper(substr(sha1(time()), 32,40));
+		#Generate invoice
+		$invoice = new Invoice;
+		$invoice->invoice_no = $request->invoiceNo;
+		$invoice->ref_no = $ref_no;
+		$invoice->client_id = $request->clientId;
+		$invoice->tenant_id = Auth::user()->tenant_id;
+		$invoice->issued_by = Auth::user()->id;
 
-				$startDateInstance = new DateTime($request->issue_date);
-				$invoice->issue_date = $startDateInstance->format('Y-m-d H:i:s');
+		$startDateInstance = new DateTime($request->issue_date);
+		$invoice->issue_date = $startDateInstance->format('Y-m-d H:i:s');
 
-					$dueDateInstance = new DateTime($request->due_date);
-				$invoice->due_date = $dueDateInstance->format('Y-m-d H:i:s');
+		$dueDateInstance = new DateTime($request->due_date);
+		$invoice->due_date = $dueDateInstance->format('Y-m-d H:i:s');
 
-        $invoice->total = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$request->tax_rate)/100 * $request->exchange_rate ) : ($totalAmount + ($totalAmount*$request->tax_rate)/100 ) ;
-        $invoice->sub_total = $request->currency != Auth::user()->tenant->currency->id ? $request->subTotal * $request->exchange_rate : $request->subTotal;
-        $invoice->tax_rate = $request->tax_rate ?? 0;
-        $invoice->tax_value = $request->currency != Auth::user()->tenant->currency->id ?  $request->tax_amount * $request->exchange_rate : $request->tax_amount;
-				$invoice->currency_id = $request->currency;
-				$invoice->exchange_rate = $request->exchange_rate ?? 1;
-        $invoice->slug = substr(sha1(time()), 23,40);
-        $invoice->save();
-        #invoiceId
-        $invoiceId = $invoice->id;
-        #Enter invoice items
-        for($i = 0; $i<count($request->description); $i++ ){
-            $pro = Product::find($request->description[$i]);
-            $item = new InvoiceItem;
-            $item->description = $pro->product_name ?? '';
-            $item->product_id = $pro->id;
-            $item->quantity = $request->quantity[$i];
-            $item->unit_cost = $request->unit_cost[$i];
-            $item->total = $request->currency != Auth::user()->tenant->currency->id ? (($request->quantity[$i] * $request->unit_cost[$i]) * $request->exchange_rate) : $request->quantity[$i] * $request->unit_cost[$i];
-            $item->invoice_id = $invoiceId;
-            $item->client_id = $request->clientId;
-            $item->tenant_id = Auth::user()->tenant_id;
-            $item->save();
-        }
-        $client = Client::where('id',$request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
-        if(empty($client->glcode)){
-            $client->glcode = $request->client_account;
-            $client->save();
-        }
-        #Check for accounting module
-        if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
-            $detail = InvoiceItem::where('invoice_id', $invoice->id)->where('tenant_id', Auth::user()->tenant_id)->get();
-            $policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
-                # Post GL
-                $invoicePost = [
-                    'glcode' => $client->glcode,
-                    'posted_by' => Auth::user()->id,
-                    'narration' => 'Invoice generation for ' . $invoice->client->company_name ?? '',
-                    'dr_amount' => $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$request->tax_rate)/100 * $request->exchange_rate ) :  ($totalAmount + ($totalAmount*$request->tax_rate)/100 ) ,
-                    'cr_amount' => 0,
-                    'ref_no' => $ref_no,
-                    'bank' => 0,
-                    'ob' => 0,
-                    //'transaction_date' => $invoice->created_at,
-                    'created_at' => $invoice->created_at
-                ];
-                DB::table(Auth::user()->tenant_id . '_gl')->insert($invoicePost);
-                $VATPost = [
-                    'glcode' => $policy->glcode,
-                    'posted_by' => Auth::user()->id,
-                    'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->company_name,
-                    'dr_amount' => 0,
-                    'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ?  $request->tax_amount * $request->exchange_rate : $request->tax_amount,
-                    'ref_no' => $ref_no,
-                    'bank' => 0,
-                    'ob' => 0,
-                    //'transaction_date' => $invoice->created_at,
-                    'created_at' => $invoice->created_at
-                ];
-                DB::table(Auth::user()->tenant_id . '_gl')->insert($VATPost);
-                foreach($detail as $d){
-                    $receiptPost = [
-                        'glcode' => $d->getProduct->glcode,
-                        'posted_by' => Auth::user()->id,
-                        'narration' => 'Invoice generation for ' . $d->description,
-                        'dr_amount' => 0,
-                        'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ? (($d->quantity * $d->unit_cost) * $request->exchange_rate) : $d->quantity * $d->unit_cost,
-                        'ref_no' => $ref_no,
-                        'bank' => 0,
-                        'ob' => 0,
-                        //'transaction_date' => $invoice->created_at,
-                        'created_at' => $invoice->created_at
-                    ];
-                    DB::table(Auth::user()->tenant_id . '_gl')->insert($receiptPost);
-                }
+		$invoice->total = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$request->tax_rate)/100 * $request->exchange_rate ) : ($totalAmount + ($totalAmount*$request->tax_rate)/100 ) ;
+		$invoice->sub_total = $request->currency != Auth::user()->tenant->currency->id ? ($request->subTotal * $request->exchange_rate) ?? 0 : $request->subTotal ?? 0;
+		$invoice->tax_rate = $request->tax_rate ?? 0;
+		$invoice->tax_value = $request->currency != Auth::user()->tenant->currency->id ?  ($request->tax_amount * $request->exchange_rate) ?? 0 : $request->tax_amount ?? 0;
+		$invoice->currency_id = $request->currency;
+		$invoice->exchange_rate = $request->exchange_rate ?? 1;
+		$invoice->slug = substr(sha1(time()), 23,40);
+		$invoice->save();
+		#invoiceId
+		$invoiceId = $invoice->id;
+		#Enter invoice items
+		for($i = 0; $i<count($request->description); $i++ ){
+			$pro = Product::find($request->description[$i]);
+			$item = new InvoiceItem;
+			$item->description = $pro->product_name ?? '';
+			$item->product_id = $pro->id;
+			$item->quantity = $request->quantity[$i];
+			$item->unit_cost = $request->unit_cost[$i];
+			$item->total = $request->currency != Auth::user()->tenant->currency->id ? (($request->quantity[$i] * $request->unit_cost[$i]) * $request->exchange_rate) ?? 0 : ($request->quantity[$i] * $request->unit_cost[$i]) ?? 0;
+			$item->invoice_id = $invoiceId;
+			$item->client_id = $request->clientId;
+			$item->tenant_id = Auth::user()->tenant_id;
+			$item->save();
+		}
+		$client = Client::where('id',$request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
+		if(empty($client->glcode)){
+			$client->glcode = $request->client_account;
+			$client->save();
+		}
+		#Check for accounting module
+		if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+			$detail = InvoiceItem::where('invoice_id', $invoice->id)->where('tenant_id', Auth::user()->tenant_id)->get();
+			$policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
+			# Post GL
+			$invoicePost = [
+				'glcode' => $client->glcode,
+				'posted_by' => Auth::user()->id,
+				'narration' => 'Invoice generation for ' . $invoice->client->company_name ?? '',
+				'dr_amount' => $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$request->tax_rate)/100 * $request->exchange_rate ) ?? 0 :  ($totalAmount + ($totalAmount*$request->tax_rate)/100 ) ?? 0 ,
+				'cr_amount' => 0,
+				'ref_no' => $ref_no,
+				'bank' => 0,
+				'ob' => 0,
+				//'transaction_date' => $invoice->created_at,
+				'created_at' => $invoice->created_at
+			];
+			DB::table(Auth::user()->tenant_id . '_gl')->insert($invoicePost);
+			$VATPost = [
+				'glcode' => $policy->glcode,
+				'posted_by' => Auth::user()->id,
+				'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->company_name,
+				'dr_amount' => 0,
+				'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ?  ($request->tax_amount * $request->exchange_rate) ?? 0 : $request->tax_amount ?? 0,
+				'ref_no' => $ref_no,
+				'bank' => 0,
+				'ob' => 0,
+				//'transaction_date' => $invoice->created_at,
+				'created_at' => $invoice->created_at
+			];
+			DB::table(Auth::user()->tenant_id . '_gl')->insert($VATPost);
+			foreach($detail as $d){
+				$receiptPost = [
+					'glcode' => $d->getProduct->glcode,
+					'posted_by' => Auth::user()->id,
+					'narration' => 'Invoice generation for ' . $d->description,
+					'dr_amount' => 0,
+					'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ? (($d->quantity * $d->unit_cost) * $request->exchange_rate) ?? 0 : ($d->quantity * $d->unit_cost) ?? 0,
+					'ref_no' => $ref_no,
+					'bank' => 0,
+					'ob' => 0,
+					//'transaction_date' => $invoice->created_at,
+					'created_at' => $invoice->created_at
+				];
+				DB::table(Auth::user()->tenant_id . '_gl')->insert($receiptPost);
+			}
 
-        }
+		}
 
-        #Register log
-        $log = new ClientLog;
-        $log->tenant_id = Auth::user()->tenant_id;
-        $log->client_id = $request->clientId;
-        $log->user_id = Auth::user()->id;
-        $log->log = Auth::user()->first_name.' '.Auth::user()->surname.' Converted contact to lead.';
-        $log->save();
-        session()->flash("success", "<strong>Success! </strong> Client converted to lead. Invoice generated.");
-        return redirect()->route('invoice-list');
-    }
+		#Register log
+		$log = new ClientLog;
+		$log->tenant_id = Auth::user()->tenant_id;
+		$log->client_id = $request->clientId;
+		$log->user_id = Auth::user()->id;
+		$log->log = Auth::user()->first_name.' '.Auth::user()->surname.' Converted contact to lead.';
+		$log->save();
+		session()->flash("success", "<strong>Success! </strong> Client converted to lead. Invoice generated.");
+		return redirect()->route('invoice-list');
+	}
 
 		public function declineInvoice($slug){
 			$invoice = Invoice::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
