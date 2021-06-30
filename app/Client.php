@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Client as ClientModel;
+use Illuminate\Support\Facades\Auth;
 
 class Client extends Model
 {
@@ -61,6 +62,10 @@ class Client extends Model
 		$client->save();
 		/*session()->flash("success", "<strong>Success!</strong> New client registered.");
 		return redirect()->route('clients');*/
+	}
+
+	public function getTenantClients(){
+		return Client::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
 	}
 
 }
