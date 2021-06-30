@@ -194,7 +194,8 @@ class HRController extends Controller
         return view('backend.hr.hr-configurations',[
         	'departments'=>$this->department->getTenantDepartments(),
 					'supervisors'=>$this->supervisor->getTenantSupervisors(),
-					'roles'=>$this->jobrole->getTenantJobRoles()
+					'job_roles'=>$this->jobrole->getTenantJobRoles(),
+					'employees'=>$this->employee->getAllActiveEmployees()
 				]);
     }
 
@@ -230,6 +231,47 @@ class HRController extends Controller
     	$this->supervisor->setNewSupervisor($request);
     	session()->flash("success", "<strong>Success!</strong> You've successfully assigned a supervisor for this department.");
     	return back();
+		}
+		public function updateSupervisor(Request $request){
+    	$this->validate($request,[
+    		'department'=>'required',
+				'supervisor'=>'required'
+			],[
+				'department.required'=>'Select department',
+				'supervisor.required'=>'Select supervisor'
+			]);
+    	$this->supervisor->updateSupervisor($request);
+    	session()->flash("success", "<strong>Success!</strong> Your changes were saved successfully.");
+    	return back();
+		}
+
+		public function addNewJobDescription(Request $request){
+    	$this->validate($request,[
+    		'job_role'=>'required',
+    		'department'=>'required',
+    		'role_description'=>'required'
+			],[
+				'job_role.required'=>'Enter job role name',
+				'department.required'=>'Select a department',
+				'role_description.required'=>'Enter a brief description'
+			]);
+    	$this->jobrole->setNewJobRole($request);
+			session()->flash("success", "<strong>Success!</strong> You've successfully added a new job role");
+			return back();
+		}
+		public function updateJobDescription(Request $request){
+    	$this->validate($request,[
+    		'job_role'=>'required',
+    		'department'=>'required',
+    		'role_description'=>'required'
+			],[
+				'job_role.required'=>'Enter job role name',
+				'department.required'=>'Select a department',
+				'role_description.required'=>'Enter a brief description'
+			]);
+    	$this->jobrole->updateJobRole($request);
+			session()->flash("success", "<strong>Success!</strong> You've successfully added a new job role");
+			return back();
 		}
 
     /*
