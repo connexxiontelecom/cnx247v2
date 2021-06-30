@@ -23,6 +23,9 @@ Convert to Lead
     overflow-y: hidden;
     white-space: nowrap;
     }
+	.select2-selection__rendered{
+		color: #8d8d8d !important;
+	}
 </style>
 @endsection
 
@@ -115,9 +118,42 @@ Convert to Lead
                         <label for="">Client Account</label>
                         <select name="client_account" id="client_account" class="form-control js-example-basic-single">
                             <option selected disabled>Select account</option>
-                            @foreach ($accounts as $account)
-                                <option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - ({{$account->glcode ?? ''}})</option>
-                            @endforeach
+														<optgroup label="Assets">
+															@foreach ($accounts as $account)
+																@if($account->account_type == 1)
+																	<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+																@endif
+															@endforeach
+														</optgroup>
+													<optgroup label="Liability">
+															@foreach ($accounts as $account)
+																@if($account->account_type == 2)
+																	<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+																@endif
+															@endforeach
+													</optgroup>
+													<optgroup label="Equity">
+														@foreach ($accounts as $account)
+															@if($account->account_type == 3)
+																<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+															@endif
+														@endforeach
+													</optgroup>
+													<optgroup label="Revenue">
+														@foreach ($accounts as $account)
+															@if($account->account_type == 4)
+																<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+															@endif
+														@endforeach
+													</optgroup>
+													<optgroup label="Expenses">
+														@foreach ($accounts as $account)
+															@if($account->account_type == 5)
+																<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+															@endif
+														@endforeach
+													</optgroup>
+
                         </select>
                         <input type="hidden" value="{{$status}}" name="status">
                         @error('client_account')

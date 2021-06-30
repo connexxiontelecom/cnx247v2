@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\CNX247\Backend;
 
+use App\ChartOfAccount;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -39,6 +40,7 @@ class CRMController extends Controller
         $this->middleware('auth');
         $this->country = new Country();
         $this->client = new Client();
+        $this->accounting = new ChartOfAccount();
     }
     //Load CRM dashboard
     public function crmDashboard(){
@@ -166,9 +168,10 @@ class CRMController extends Controller
             }else{
                 $invoiceNo = rand(111, 999);
             }
-            if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+            $status = $this->accounting->checkForAccountingPackageSubscription();
+            if($status == 1){
                 $status = 1; //subscribed for accounting package
-                $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->get();
+                $accounts = $this->accounting->getDetailedAccounts();
                 return view('backend.crm.clients.convert-to-lead',
                 ['client'=>$client,
                 'invoice_no'=>$invoiceNo,
