@@ -35,6 +35,10 @@ class HRController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->employee = new User();
+        $this->department = new Department();
+        $this->supervisor = new Supervisor();
+        $this->jobrole = new JobRole();
     }
 
     /*
@@ -65,9 +69,10 @@ class HRController extends Controller
     * Get list of all employees
     */
     public function index(){
-        $data['employeees'] = User::where('tenant_id', Auth::user()->tenant_id)->get();
-       //print_r($data);
-        return view('backend.hr.employees', $data);
+
+        return view('backend.hr.employees',[
+        	'employees'=>$this->employee->getAllActiveEmployees()
+				]);
     }
 
     /*
@@ -186,8 +191,46 @@ class HRController extends Controller
     * HR Configurations
     */
     public function hrConfigurations(){
-        return view('backend.hr.hr-configurations');
+        return view('backend.hr.hr-configurations',[
+        	'departments'=>$this->department->getTenantDepartments(),
+					'supervisors'=>$this->supervisor->getTenantSupervisors(),
+					'roles'=>$this->jobrole->getTenantJobRoles()
+				]);
     }
+
+    public function addNewDepartment(Request $request){
+    	$this->validate($request,[
+    		'department_name'=>'required'
+			],[
+				'department.required'=>'Enter department name'
+			]);
+    	$this->department->setNewDepartment($request);
+    	session()->flash("success", "<strong>Success!</strong> New department registered.");
+    	return back();
+		}
+		public function updateDepartment(Request $request){
+    	$this->validate($request,[
+    		'department_name'=>'required'
+			],[
+				'department.required'=>'Enter department name'
+			]);
+    	$this->department->updateDepartment($request);
+    	session()->flash("success", "<strong>Success!</strong> Your changes were saved successfully.");
+    	return back();
+		}
+
+		public function addNewSupervisor(Request $request){
+    	$this->validate($request,[
+    		'department'=>'required',
+				'supervisor'=>'required'
+			],[
+				'department.required'=>'Select department',
+				'supervisor.required'=>'Select supervisor'
+			]);
+    	$this->supervisor->setNewSupervisor($request);
+    	session()->flash("success", "<strong>Success!</strong> You've successfully assigned a supervisor for this department.");
+    	return back();
+		}
 
     /*
     * Assign Permission to employee

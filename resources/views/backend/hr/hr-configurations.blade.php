@@ -50,8 +50,94 @@
                                             </div>
                                             <div id="collapseDepartment" class="panel-collapse in collapse" role="tabpanel" aria-labelledby="headingDepartment" style="">
                                                 <div class="accordion-content accordion-desc">
-                                                    @livewire('backend.hr.common.department')
-                                                </div>
+																									<div class="row">
+																										<div class="col-md-4">
+																											<div class="card">
+																												<div class="card-header">
+																													<h5 class="sub-title">Add New Department</h5>
+																												</div>
+																												<div class="card-block">
+																													<form action="{{route('add-new-department')}}" method="post">
+																														@csrf
+																														<div class="form-group">
+																															<label for="">Department Name</label>
+																															<input type="text" class="form-control" placeholder="Department Name" name="department_name">
+																															@error('department_name')
+																															<i class="text-danger mt-2">{{$message}}</i>
+																															@enderror
+																														</div>
+																														<div class="form-group d-flex justify-content-center">
+																															<button class="btn btn-mini btn-primary" type="submit"> <i class="ti-check"></i> Submit</button>
+																														</div>
+																													</form>
+
+																												</div>
+																											</div>
+																										</div>
+																										<div class="col-md-8">
+																											<div class="card">
+																												<div class="card-header">
+																													<h5 class="sub-title">Departments</h5>
+																												</div>
+																												<div class="card-block">
+																													<div class="table-responsive">
+																														<table class="table table-bordered">
+																															<thead>
+																															<th>#</th>
+																															<th>Departments</th>
+																															<th>Date</th>
+																															<th>Action</th>
+																															</thead>
+																															<tbody>
+																															@php
+																																$i = 1;
+																															@endphp
+																															@foreach ($departments as $depart)
+																																<tr>
+																																	<td>{{$i++}}</td>
+																																	<td>{{$depart->department_name ?? ''}}</td>
+																																	<td>{{date('d F, Y', strtotime($depart->created_at)) ?? ''}} @ <small>{{date('h:ia', strtotime($depart->created_at))}}</small></td>
+																																	<td>
+																																		<a href="javascript:void(0);" data-toggle="modal" data-target="#editDepartment_{{$depart->id}}"> <i class="ti-pencil text-warning"></i> </a>
+																																		<div class="modal fade" id="editDepartment_{{$depart->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																																			<div class="modal-dialog" role="document">
+																																				<div class="modal-content">
+																																					<div class="modal-header">
+																																						<h5 class="modal-title" id="exampleModalLabel">Edit {{$depart->department_name ?? ''}}</h5>
+																																						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																							<span aria-hidden="true">&times;</span>
+																																						</button>
+																																					</div>
+																																					<div class="modal-body">
+																																						<form action="{{route('update-department')}}" method="post">
+																																							@csrf
+																																							<div class="form-group">
+																																								<label for="">Department Name</label>
+																																								<input type="text" class="form-control" value="{{$depart->department_name ?? ''}}" placeholder="Department Name" name="department_name">
+																																								@error('department_name')
+																																								<i class="text-danger mt-2">{{$message}}</i>
+																																								@enderror
+																																								<input type="hidden" name="department" value="{{$depart->id}}">
+																																							</div>
+																																							<div class="form-group d-flex justify-content-center">
+																																								<button class="btn btn-mini btn-primary" type="submit"> <i class="ti-check"></i> Save changes</button>
+																																							</div>
+																																						</form>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																	</td>
+																																</tr>
+																															@endforeach
+																															</tbody>
+																														</table>
+																													</div>
+																												</div>
+																											</div>
+																										</div>
+																									</div>
+																								</div>
                                             </div>
                                         </div>
                                         <div class="accordion-panel">

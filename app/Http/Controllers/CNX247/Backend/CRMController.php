@@ -29,6 +29,7 @@ use App\Currency;
 use Auth;
 use Image;
 use DB;
+use App\Country;
 use Schema;
 use DateTime;
 
@@ -36,6 +37,7 @@ class CRMController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
+        $this->country = new Country();
     }
     //Load CRM dashboard
     public function crmDashboard(){
@@ -127,7 +129,8 @@ class CRMController extends Controller
     * Create new client
     */
     public function createClient(){
-        return view('backend.crm.clients.create');
+    	$countries = $this->country->getCountries();
+        return view('backend.crm.clients.create', ['countries'=>$countries]);
     }
 
     /*

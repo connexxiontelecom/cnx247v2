@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8 col-lg-8 col-sm-12 offset-md-2 offset-lg-2">
+        <div class="col-md-12 col-lg-12 col-sm-12">
             <div class="card">
                 <div class="btn-group mt-3 btn-group d-flex justify-content-end mr-3" >
                     <a href="{{route('clients')}}" class="btn btn-primary btn-mini waves-effect waves-light">
