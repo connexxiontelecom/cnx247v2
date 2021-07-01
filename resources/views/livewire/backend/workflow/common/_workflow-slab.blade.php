@@ -18,8 +18,9 @@
                 <a class="dropdown-item waves-light waves-effect" href="{{route('leave-request')}}"><i class="ti-calendar mr-2 text-danger"></i> Leave Approval </a>
                 <a class="dropdown-item waves-light waves-effect" href="{{ route('internal-memo') }}"><i class="ti-pin-alt mr-2 text-danger"></i> Internal Memo </a>
 							<hr>
+							@can('workflow business process')
 							<a class="dropdown-item waves-light waves-effect" href="{{ route('workflow-business-process') }}"><i class="ti-pin-alt mr-2 text-danger"></i> Workflow Business Process </a>
-
+							@endcan
             </div>
         </div>
     </div>
