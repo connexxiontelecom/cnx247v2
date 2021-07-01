@@ -35,7 +35,9 @@
                                                 <img src="/assets/images/clients/avatars/thumbnails/{{$client->avatar ?? 'avatar.png'}}" alt="" class="img-100">
                                             </div>
                                             <div style="text-align: left;" class="mt-2">
-                                                <p><label class="label label-primary">Full Name</label></p>
+                                                <p><label class="label label-primary">Company Name</label></p>
+                                                <label> {{$client->company_name ?? ''}}</label>
+																								<p><label class="label label-primary">Full Name</label></p>
                                                 <label>{{$client->title ?? ''}} {{$client->first_name ?? ''}} {{$client->surname ?? ''}}</label>
 
                                                 <p><label class="label label-primary">Mobile</label></p>

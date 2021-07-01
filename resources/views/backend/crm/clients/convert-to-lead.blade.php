@@ -23,6 +23,9 @@ Convert to Lead
     overflow-y: hidden;
     white-space: nowrap;
     }
+	.select2-selection__rendered{
+		color: #8d8d8d !important;
+	}
 </style>
 @endsection
 
@@ -75,7 +78,7 @@ Convert to Lead
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
                     <h6>Client Information :</h6>
-                    <h6 class="m-0">{{$client->title ?? ''}} {{$client->first_name ?? ''}} {{$client->surname ?? ''}}</h6>
+                    <h6 class="m-0">{{$client->company_name ?? ''}} </h6>
                     <p class="m-0 m-t-10">{{$client->street_1 ?? ''}}. {{$client->city ?? ''}}, {{$client->postal_code ?? ''}}</p>
                     <p class="m-0">{{$client->mobile_no ?? ''}}</p>
                     <p><a href="mailto:{{$client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[ {{$client->email ?? ''}} ]</a></p>
@@ -115,9 +118,42 @@ Convert to Lead
                         <label for="">Client Account</label>
                         <select name="client_account" id="client_account" class="form-control js-example-basic-single">
                             <option selected disabled>Select account</option>
-                            @foreach ($accounts as $account)
-                                <option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - ({{$account->glcode ?? ''}})</option>
-                            @endforeach
+														<optgroup label="Assets">
+															@foreach ($accounts as $account)
+																@if($account->account_type == 1)
+																	<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+																@endif
+															@endforeach
+														</optgroup>
+													<optgroup label="Liability">
+															@foreach ($accounts as $account)
+																@if($account->account_type == 2)
+																	<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+																@endif
+															@endforeach
+													</optgroup>
+													<optgroup label="Equity">
+														@foreach ($accounts as $account)
+															@if($account->account_type == 3)
+																<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+															@endif
+														@endforeach
+													</optgroup>
+													<optgroup label="Revenue">
+														@foreach ($accounts as $account)
+															@if($account->account_type == 4)
+																<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+															@endif
+														@endforeach
+													</optgroup>
+													<optgroup label="Expenses">
+														@foreach ($accounts as $account)
+															@if($account->account_type == 5)
+																<option value="{{$account->glcode}}">{{$account->glcode ?? ''}} - {{$account->account_name ?? ''}}</option>
+															@endif
+														@endforeach
+													</optgroup>
+
                         </select>
                         <input type="hidden" value="{{$status}}" name="status">
                         @error('client_account')
@@ -273,8 +309,8 @@ Convert to Lead
 
                     <input type="hidden" name="hiddenTaxRate"  id="hiddenTaxRate">
                     <input type="hidden" name="hiddenDiscountRate"  id="hiddenDiscountRate">
-                    <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Lead</button>
-                    <a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
+									<a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
+									<button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Lead</button>
                 </div>
             </div>
         </div>

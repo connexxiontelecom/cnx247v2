@@ -26,13 +26,14 @@ class Create extends Component
          $this->validate([
             'first_name'=>'required',
             'surname'=>'required',
-            'mobile_no'=>'required|regex:/^\+[1-9]\d{1,14}$/',
+            'mobile_no'=>'required',
             'street_1'=>'required',
             'email'=>'required|email',
             'country'=>'required',
             'company_name'=>'required',
             'city'=>'required'
          ], $messages);
+         //|regex:/^\+[1-9]\d{1,14}$/
         $client = new Client;
         $client->owner = Auth::user()->id;
         $client->assigned_to = Auth::user()->id;
