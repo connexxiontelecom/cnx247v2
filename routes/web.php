@@ -83,6 +83,7 @@ Route::get('/workflow-tasks', 'CNX247\Backend\WorkflowController@index')->name('
 //Route::get('/workflow-statistics', 'CNX247\Backend\WorkflowController@statistics')->name('workflow-statistics');
 Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewWorkflowTask')->name('view-workflow-task');
 Route::get('/workflow-business-process', 'CNX247\Backend\WorkflowController@businessProcess')->name('workflow-business-process');
+Route::post('/update-workflow-business-process', 'CNX247\Backend\WorkflowController@updateBusinessProcess')->name('update-workflow-business-process');
 Route::post('/workflow/business-process', 'CNX247\Backend\WorkflowController@setBusinessProcess');
 Route::post('/workflow/approve-or-decline-request', 'CNX247\Backend\WorkflowController@approveOrDeclineRequest');
 Route::post('/search-workflow-assignment', 'CNX247\Backend\WorkflowController@searchWorkflowAssignment')->name('search-workflow-assignment');

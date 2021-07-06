@@ -144,6 +144,31 @@ class WorkflowController extends Controller
         }
 		}
 
+		public function updateBusinessProcess(Request $request){
+        $this->validate($request,[
+            'department'=>'required',
+            'processor'=>'required',
+            'request_type'=>'required'
+        ]);
+        $p = RequestApprover::find($request->process);
+        $p->user_id =  $request->processor;
+        $p->request_type =  $request->request_type;
+        $p->depart_id =  $request->department;
+        $p->set_by =  Auth::user()->id;
+        $p->approver_stage =  'undefined';
+        $p->tenant_id =  Auth::user()->tenant_id;
+				$p->save();
+				#Log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." Workflow business process updated.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
+        session()->flash("success", "<strong>Success</strong> Changes saved.");
+        return back();
+		}
+
 		/*
     * approveOrDeclineRequest request
     */
