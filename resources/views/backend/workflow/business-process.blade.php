@@ -109,7 +109,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="edit_request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -202,7 +202,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="edit_request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -295,7 +295,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="edit_request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -388,7 +388,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="edit_request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -481,7 +481,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="edit_request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
