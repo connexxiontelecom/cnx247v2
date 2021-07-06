@@ -146,14 +146,24 @@ class WorkflowController extends Controller
 
 		public function updateBusinessProcess(Request $request){
         $this->validate($request,[
-            'department'=>'required',
-            'processor'=>'required',
-            'request_type'=>'required'
+            'edit_department'=>'required',
+            'edit_processor'=>'required',
+            'edit_request_type'=>'required'
         ]);
+
+        if(Auth::user()->avatar != 'avatar.png'){
+        	$file->delete();
+				}
+
+
+
+
+
+
         $p = RequestApprover::find($request->process);
-        $p->user_id =  $request->processor;
-        $p->request_type =  $request->request_type;
-        $p->depart_id =  $request->department;
+        $p->user_id =  $request->edit_processor;
+        $p->request_type =  $request->edit_request_type;
+        $p->depart_id =  $request->edit_department;
         $p->set_by =  Auth::user()->id;
         $p->approver_stage =  'undefined';
         $p->tenant_id =  Auth::user()->tenant_id;

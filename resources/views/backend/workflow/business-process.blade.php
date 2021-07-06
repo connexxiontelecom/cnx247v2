@@ -90,7 +90,7 @@
 																																														@csrf
 																																														<div class="form-group">
 																																															<label for="">Department</label>
-																																															<select name="department" id="department" class="form-control" required>
+																																															<select name="edit_department" id="edit_department" class="form-control" required>
 																																																<option selected disabled>Select department</option>
 																																																@foreach ($departments as $department)
 																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
@@ -99,7 +99,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Processor</label>
-																																															<select name="processor" id="processor" class="form-control" required>
+																																															<select name="edit_processor" id="edit_processor" class="form-control" required>
 																																																<option selected disabled>Select processor</option>
 																																																@foreach ($employees as $employee)
 																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
@@ -109,7 +109,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="request_type" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -183,7 +183,7 @@
 																																														@csrf
 																																														<div class="form-group">
 																																															<label for="">Department</label>
-																																															<select name="department" id="department" class="form-control" required>
+																																															<select name="edit_department" id="edit_department" class="form-control" required>
 																																																<option selected disabled>Select department</option>
 																																																@foreach ($departments as $department)
 																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
@@ -192,7 +192,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Processor</label>
-																																															<select name="processor" id="processor" class="form-control" required>
+																																															<select name="edit_processor" id="edit_processor" class="form-control" required>
 																																																<option selected disabled>Select processor</option>
 																																																@foreach ($employees as $employee)
 																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
@@ -202,7 +202,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="request_type" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -276,7 +276,7 @@
 																																														@csrf
 																																														<div class="form-group">
 																																															<label for="">Department</label>
-																																															<select name="department" id="department" class="form-control" required>
+																																															<select name="edit_department" id="edit_department" class="form-control" required>
 																																																<option selected disabled>Select department</option>
 																																																@foreach ($departments as $department)
 																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
@@ -285,7 +285,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Processor</label>
-																																															<select name="processor" id="processor" class="form-control" required>
+																																															<select name="edit_processor" id="edit_processor" class="form-control" required>
 																																																<option selected disabled>Select processor</option>
 																																																@foreach ($employees as $employee)
 																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
@@ -295,7 +295,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="request_type" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -369,7 +369,7 @@
 																																														@csrf
 																																														<div class="form-group">
 																																															<label for="">Department</label>
-																																															<select name="department" id="department" class="form-control" required>
+																																															<select name="edit_department" id="edit_department" class="form-control" required>
 																																																<option selected disabled>Select department</option>
 																																																@foreach ($departments as $department)
 																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
@@ -378,7 +378,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Processor</label>
-																																															<select name="processor" id="processor" class="form-control" required>
+																																															<select name="edit_processor" id="edit_processor" class="form-control" required>
 																																																<option selected disabled>Select processor</option>
 																																																@foreach ($employees as $employee)
 																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
@@ -388,7 +388,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="request_type" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
@@ -462,7 +462,7 @@
 																																														@csrf
 																																														<div class="form-group">
 																																															<label for="">Department</label>
-																																															<select name="department" id="department" class="form-control" required>
+																																															<select name="edit_department" id="edit_department" class="form-control" required>
 																																																<option selected disabled>Select department</option>
 																																																@foreach ($departments as $department)
 																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
@@ -471,7 +471,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Processor</label>
-																																															<select name="processor" id="processor" class="form-control" required>
+																																															<select name="edit_processor" id="edit_processor" class="form-control" required>
 																																																<option selected disabled>Select processor</option>
 																																																@foreach ($employees as $employee)
 																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
@@ -481,7 +481,7 @@
 																																														</div>
 																																														<div class="form-group">
 																																															<label for="">Request Type</label>
-																																															<select name="request_type" id="request_type" class="form-control" required>
+																																															<select name="edit_request_type" id="request_type" class="form-control" required>
 																																																<option value="expense-report">Expense Report</option>
 																																																<option value="purchase-request">Purchase Request</option>
 																																																<option value="general-request">General Request</option>
