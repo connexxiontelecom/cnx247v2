@@ -19,19 +19,19 @@
             <div class="card">
                 <div class="card-block">
                     <div class="card-header">
-                        @if (session()->has('success'))
-                        <div class="alert alert-success background-success mt-3">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <i class="icofont icofont-close-line-circled text-white"></i>
-                            </button>
-                            {!! session()->get('success') !!}
-                        </div>
-                    @endif
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-block">
+																	@if(session()->has('success'))
+																		<div class="alert alert-success background-success">
+																			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+																				<i class="icofont icofont-close-line-circled text-white"></i>
+																			</button>
+																			{!! session()->get('success') !!}
+																		</div>
+																	@endif
                                     <h5 class="sub-title">Business Process</h5>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -75,7 +75,58 @@
                                                                                     <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
+                                                                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#expenseModal_{{$item->id}}"><i class="ti-pencil"></i></a>
+																																									<div class="modal fade" id="expenseModal_{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																																										<div class="modal-dialog" role="document">
+																																											<div class="modal-content">
+																																												<div class="modal-header">
+																																													<h6 class="modal-title" id="exampleModalLabel">Edit Settings</h6>
+																																													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																														<span aria-hidden="true">&times;</span>
+																																													</button>
+																																												</div>
+																																												<div class="modal-body">
+																																													<form action="{{route('update-workflow-business-process')}}"  data-parsley-validate method="post">
+																																														@csrf
+																																														<div class="form-group">
+																																															<label for="">Department</label>
+																																															<select name="department" id="department" class="form-control" required>
+																																																<option selected disabled>Select department</option>
+																																																@foreach ($departments as $department)
+																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Processor</label>
+																																															<select name="processor" id="processor" class="form-control" required>
+																																																<option selected disabled>Select processor</option>
+																																																@foreach ($employees as $employee)
+																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																															<input type="hidden" name="process" value="{{$item->id}}">
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Request Type</label>
+																																															<select name="request_type" id="request_type" class="form-control" required>
+																																																<option value="expense-report">Expense Report</option>
+																																																<option value="purchase-request">Purchase Request</option>
+																																																<option value="general-request">General Request</option>
+																																																<option value="leave-request">Leave Approval</option>
+																																																<option value="business-trip">Business Trip</option>
+																																															</select>
+																																														</div>
+																																														<hr>
+																																														<div class="btn-group d-flex justify-content-center">
+																																															<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
+																																															<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="businessProcessBtn"><i class="mr-2 ti-check"></i>Submit</button>
+																																														</div>
+																																													</form>
+																																												</div>
+																																											</div>
+																																										</div>
+																																									</div>
                                                                                 </td>
                                                                             </tr>
                                                                         @endif
@@ -117,7 +168,58 @@
                                                                                     <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
+																																									<a href="javascript:void(0);" data-toggle="modal" data-target="#purchaseModal_{{$item->id}}"><i class="ti-pencil"></i></a>
+																																									<div class="modal fade" id="purchaseModal_{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																																										<div class="modal-dialog" role="document">
+																																											<div class="modal-content">
+																																												<div class="modal-header">
+																																													<h6 class="modal-title" id="exampleModalLabel">Edit Settings</h6>
+																																													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																														<span aria-hidden="true">&times;</span>
+																																													</button>
+																																												</div>
+																																												<div class="modal-body">
+																																													<form action="{{route('update-workflow-business-process')}}"  data-parsley-validate method="post">
+																																														@csrf
+																																														<div class="form-group">
+																																															<label for="">Department</label>
+																																															<select name="department" id="department" class="form-control" required>
+																																																<option selected disabled>Select department</option>
+																																																@foreach ($departments as $department)
+																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Processor</label>
+																																															<select name="processor" id="processor" class="form-control" required>
+																																																<option selected disabled>Select processor</option>
+																																																@foreach ($employees as $employee)
+																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																															<input type="hidden" name="process" value="{{$item->id}}">
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Request Type</label>
+																																															<select name="request_type" id="request_type" class="form-control" required>
+																																																<option value="expense-report">Expense Report</option>
+																																																<option value="purchase-request">Purchase Request</option>
+																																																<option value="general-request">General Request</option>
+																																																<option value="leave-request">Leave Approval</option>
+																																																<option value="business-trip">Business Trip</option>
+																																															</select>
+																																														</div>
+																																														<hr>
+																																														<div class="btn-group d-flex justify-content-center">
+																																															<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
+																																															<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="businessProcessBtn"><i class="mr-2 ti-check"></i>Submit</button>
+																																														</div>
+																																													</form>
+																																												</div>
+																																											</div>
+																																										</div>
+																																									</div>
                                                                                 </td>
                                                                             </tr>
                                                                         @endif
@@ -159,7 +261,58 @@
                                                                                     <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
+																																									<a href="javascript:void(0);" data-toggle="modal" data-target="#generalModal_{{$item->id}}"><i class="ti-pencil"></i></a>
+																																									<div class="modal fade" id="generalModal_{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																																										<div class="modal-dialog" role="document">
+																																											<div class="modal-content">
+																																												<div class="modal-header">
+																																													<h6 class="modal-title" id="exampleModalLabel">Edit Settings</h6>
+																																													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																														<span aria-hidden="true">&times;</span>
+																																													</button>
+																																												</div>
+																																												<div class="modal-body">
+																																													<form action="{{route('update-workflow-business-process')}}"  data-parsley-validate method="post">
+																																														@csrf
+																																														<div class="form-group">
+																																															<label for="">Department</label>
+																																															<select name="department" id="department" class="form-control" required>
+																																																<option selected disabled>Select department</option>
+																																																@foreach ($departments as $department)
+																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Processor</label>
+																																															<select name="processor" id="processor" class="form-control" required>
+																																																<option selected disabled>Select processor</option>
+																																																@foreach ($employees as $employee)
+																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																															<input type="hidden" name="process" value="{{$item->id}}">
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Request Type</label>
+																																															<select name="request_type" id="request_type" class="form-control" required>
+																																																<option value="expense-report">Expense Report</option>
+																																																<option value="purchase-request">Purchase Request</option>
+																																																<option value="general-request">General Request</option>
+																																																<option value="leave-request">Leave Approval</option>
+																																																<option value="business-trip">Business Trip</option>
+																																															</select>
+																																														</div>
+																																														<hr>
+																																														<div class="btn-group d-flex justify-content-center">
+																																															<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
+																																															<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="businessProcessBtn"><i class="mr-2 ti-check"></i>Submit</button>
+																																														</div>
+																																													</form>
+																																												</div>
+																																											</div>
+																																										</div>
+																																									</div>
                                                                                 </td>
                                                                             </tr>
                                                                         @endif
@@ -201,7 +354,58 @@
                                                                                     <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
+																																									<a href="javascript:void(0);" data-toggle="modal" data-target="#generalModal_{{$item->id}}"><i class="ti-pencil"></i></a>
+																																									<div class="modal fade" id="generalModal_{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																																										<div class="modal-dialog" role="document">
+																																											<div class="modal-content">
+																																												<div class="modal-header">
+																																													<h6 class="modal-title" id="exampleModalLabel">Edit Settings</h6>
+																																													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																														<span aria-hidden="true">&times;</span>
+																																													</button>
+																																												</div>
+																																												<div class="modal-body">
+																																													<form action="{{route('update-workflow-business-process')}}"  data-parsley-validate method="post">
+																																														@csrf
+																																														<div class="form-group">
+																																															<label for="">Department</label>
+																																															<select name="department" id="department" class="form-control" required>
+																																																<option selected disabled>Select department</option>
+																																																@foreach ($departments as $department)
+																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Processor</label>
+																																															<select name="processor" id="processor" class="form-control" required>
+																																																<option selected disabled>Select processor</option>
+																																																@foreach ($employees as $employee)
+																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																															<input type="hidden" name="process" value="{{$item->id}}">
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Request Type</label>
+																																															<select name="request_type" id="request_type" class="form-control" required>
+																																																<option value="expense-report">Expense Report</option>
+																																																<option value="purchase-request">Purchase Request</option>
+																																																<option value="general-request">General Request</option>
+																																																<option value="leave-request">Leave Approval</option>
+																																																<option value="business-trip">Business Trip</option>
+																																															</select>
+																																														</div>
+																																														<hr>
+																																														<div class="btn-group d-flex justify-content-center">
+																																															<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
+																																															<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="businessProcessBtn"><i class="mr-2 ti-check"></i>Submit</button>
+																																														</div>
+																																													</form>
+																																												</div>
+																																											</div>
+																																										</div>
+																																									</div>
                                                                                 </td>
                                                                             </tr>
                                                                         @endif
@@ -243,7 +447,58 @@
                                                                                     <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
+																																									<a href="javascript:void(0);" data-toggle="modal" data-target="#leaveModal_{{$item->id}}"><i class="ti-pencil"></i></a>
+																																									<div class="modal fade" id="leaveModal_{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																																										<div class="modal-dialog" role="document">
+																																											<div class="modal-content">
+																																												<div class="modal-header">
+																																													<h6 class="modal-title" id="exampleModalLabel">Edit Settings</h6>
+																																													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																														<span aria-hidden="true">&times;</span>
+																																													</button>
+																																												</div>
+																																												<div class="modal-body">
+																																													<form action="{{route('update-workflow-business-process')}}"  data-parsley-validate method="post">
+																																														@csrf
+																																														<div class="form-group">
+																																															<label for="">Department</label>
+																																															<select name="department" id="department" class="form-control" required>
+																																																<option selected disabled>Select department</option>
+																																																@foreach ($departments as $department)
+																																																	<option value="{{$department->id}}" {{$department->id == $item->department->id ? 'selected' : ''}}>{{$department->department_name ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Processor</label>
+																																															<select name="processor" id="processor" class="form-control" required>
+																																																<option selected disabled>Select processor</option>
+																																																@foreach ($employees as $employee)
+																																																	<option value="{{$employee->id}}" {{$employee->id == $item->processor->id ? 'selected' : ''}}>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
+																																																@endforeach
+																																															</select>
+																																															<input type="hidden" name="process" value="{{$item->id}}">
+																																														</div>
+																																														<div class="form-group">
+																																															<label for="">Request Type</label>
+																																															<select name="request_type" id="request_type" class="form-control" required>
+																																																<option value="expense-report">Expense Report</option>
+																																																<option value="purchase-request">Purchase Request</option>
+																																																<option value="general-request">General Request</option>
+																																																<option value="leave-request">Leave Approval</option>
+																																																<option value="business-trip">Business Trip</option>
+																																															</select>
+																																														</div>
+																																														<hr>
+																																														<div class="btn-group d-flex justify-content-center">
+																																															<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
+																																															<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="businessProcessBtn"><i class="mr-2 ti-check"></i>Submit</button>
+																																														</div>
+																																													</form>
+																																												</div>
+																																											</div>
+																																										</div>
+																																									</div>
                                                                                 </td>
                                                                             </tr>
                                                                         @endif
