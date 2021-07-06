@@ -151,15 +151,6 @@ class WorkflowController extends Controller
             'edit_request_type'=>'required'
         ]);
 
-        if(Auth::user()->avatar != 'avatar.png'){
-        	$file->delete();
-				}
-
-
-
-
-
-
         $p = RequestApprover::find($request->process);
         $p->user_id =  $request->edit_processor;
         $p->request_type =  $request->edit_request_type;
